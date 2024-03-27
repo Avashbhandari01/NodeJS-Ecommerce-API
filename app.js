@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const { connection } = require('./database/dbConfig');
 
 const app = express();
 const port = 3000;
@@ -40,6 +41,10 @@ app.get("/", (req, res) => {
 app.use("/api", require("./routes/sampleRoutes"));
 
 // Start the server
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}...`)
+connection().then(() => {
+    app.listen(port, () => {
+        console.log(`Server is running on port ${port}...`)
+    });
+}).catch(error => {
+    console.error('Unable to connect to the database:', error);
 });
