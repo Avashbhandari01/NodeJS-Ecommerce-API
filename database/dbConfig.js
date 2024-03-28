@@ -1,18 +1,23 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize');
 
-const connection = async () => {
-    const sequelize = new Sequelize('EcommerceDB', 'postgres', 'admin', {
-        host: 'localhost',
-        dialect: 'postgres',
-    });
+const sequelize = new Sequelize('EcommerceDB', 'postgres', 'admin', {
+    host: 'localhost',
+    logging: false,
+    dialect: 'postgres',
+});
 
+// Define models
+const User = require('../models/userModel')(sequelize, DataTypes);
+
+// Synchronize models with the database
+async function synchronizeModels() {
     try {
-        await sequelize.authenticate();
-        console.log('Connection has been established successfully.');
+        await sequelize.sync({ force: false });
+        console.log('Models synchronized with database.');
     } catch (error) {
-        console.log('Unable to connect to the database:', error);
+        console.error('Error synchronizing models:', error);
         throw error;
     }
 }
 
-module.exports = { connection };
+module.exports = { sequelize, User, synchronizeModels };

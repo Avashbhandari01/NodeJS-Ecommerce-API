@@ -1,13 +1,14 @@
 const express = require('express');
+const dotenv = require("dotenv").config();
 const bodyParser = require('body-parser');
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
-const { connection } = require('./database/dbConfig');
+const { sequelize, synchronizeModels } = require('./database/dbConfig');
 
 const app = express();
 const port = 3000;
 
-// Body parser middleware
+// Middleware
 app.use(bodyParser.json());
 
 // Swagger options
@@ -33,18 +34,27 @@ const swaggerSpec = swaggerJSDoc(swaggerOptions);
 // Serve Swagger UI
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+// Routes
 app.get("/", (req, res) => {
     res.send(`Server is running....`);
-})
+});
 
-// Example routes
 app.use("/api", require("./routes/sampleRoutes"));
+app.use("/api", require("./routes/userRoutes"));
 
 // Start the server
-connection().then(() => {
-    app.listen(port, () => {
-        console.log(`Server is running on port ${port}...`)
-    });
-}).catch(error => {
-    console.error('Unable to connect to the database:', error);
-});
+async function startServer() {
+    try {
+        await synchronizeModels(); // Ensure models are synchronized before starting server
+        await sequelize.authenticate(); // Test database connection
+        console.log('Database connection has been established successfully.');
+
+        app.listen(port, () => {
+            console.log(`Server is running on port ${port}...`);
+        });
+    } catch (error) {
+        console.error('Unable to start server:', error);
+    }
+}
+
+startServer();
