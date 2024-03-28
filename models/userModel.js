@@ -22,10 +22,15 @@ module.exports = (sequelize, DataTypes) => {
             },
             PhotoURL: {
                 type: DataTypes.STRING,
+            },
+            Roles: {
+                type: DataTypes.ENUM('user', 'admin'),
+                allowNull: false,
+                defaultValue: 'user'
             }
         },
         {
-            tableName: "tbl_User",
+            tableName: "tbl_Users",
         }
     );
     return User;

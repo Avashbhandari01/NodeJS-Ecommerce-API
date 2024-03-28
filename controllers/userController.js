@@ -1,4 +1,4 @@
-const { User } = require('../database/dbConfig')
+const { User } = require('../database/dbConfig');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -55,7 +55,7 @@ const loginUser = async (req, res) => {
 
         if (isPasswordValid) {
             const token = jwt.sign(
-                { id: userExists.Id, email: userExists.Email, fullName: userExists.FullName, photoURL: userExists.PhotoURL },
+                { id: userExists.Id, email: userExists.Email, fullName: userExists.FullName, photoURL: userExists.PhotoURL, role: userExists.Roles },
                 process.env.JWT_SECRET,
                 { expiresIn: 3600 }
             );

@@ -1,9 +1,9 @@
 const express = require('express');
-const dotenv = require("dotenv").config();
 const bodyParser = require('body-parser');
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const { sequelize, synchronizeModels } = require('./database/dbConfig');
+const { User } = require('./database/dbConfig');
 
 const app = express();
 const port = 3000;
@@ -25,6 +25,21 @@ const swaggerOptions = {
                 url: 'http://localhost:3000',
             }
         ],
+        components: {
+            securitySchemes: {
+                Bearer: {
+                    type: 'apiKey',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                    description: 'Enter "Bearer" followed by a space and then your valid JWT token.',
+                    name: 'Authorization',
+                    in: 'header',
+                }
+            }
+        },
+        security: [{
+            bearerAuth: []
+        }]
     },
     apis: ['./routes/*.js'],
 };
@@ -39,8 +54,32 @@ app.get("/", (req, res) => {
     res.send(`Server is running....`);
 });
 
-app.use("/api", require("./routes/sampleRoutes"));
 app.use("/api", require("./routes/userRoutes"));
+app.use("/api", require("./routes/productRoutes"));
+
+// Seed admin user
+async function seedAdmin() {
+    try {
+        // Check if admin user already exists
+        const admin = await User.findOne({ where: { Roles: 'admin' } });
+        if (admin) {
+            console.log('Admin user already exists.');
+            return;
+        }
+
+        // Create admin user
+        await User.create({
+            FullName: 'Admin User',
+            Email: 'admin@gmail.com',
+            Password: 'admin',
+            Roles: 'admin'
+        });
+
+        console.log('Admin user seeded successfully.');
+    } catch (error) {
+        console.error('Error seeding admin user:', error);
+    }
+}
 
 // Start the server
 async function startServer() {
@@ -48,6 +87,8 @@ async function startServer() {
         await synchronizeModels(); // Ensure models are synchronized before starting server
         await sequelize.authenticate(); // Test database connection
         console.log('Database connection has been established successfully.');
+
+        await seedAdmin(); // Seed admin user
 
         app.listen(port, () => {
             console.log(`Server is running on port ${port}...`);
