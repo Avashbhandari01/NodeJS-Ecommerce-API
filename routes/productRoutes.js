@@ -17,7 +17,7 @@ router.get('/products', getProducts);
 
 /**
  * @swagger
- * /api/create-products:
+ * /api/create-product:
  *   post:
  *     summary: Create a new product
  *     tags: 
@@ -44,6 +44,8 @@ router.get('/products', getProducts);
  *                 type: number
  *               Description:
  *                 type: string
+ *               Quantity:
+ *                 type: number
  *     responses:
  *       '200':
  *         description: Product created successfully.
@@ -63,7 +65,7 @@ router.post('/create-product', createProduct);
  *       - in: path
  *         name: productId
  *         schema:
- *           type: string
+ *           type: integer
  *         required: true
  *         description: ID of the product to update
  *     requestBody:
@@ -86,6 +88,8 @@ router.post('/create-product', createProduct);
  *                 type: number
  *               Description:
  *                 type: string
+ *               Quantity:
+ *                 type: number
  *     responses:
  *       '200':
  *         description: Product updated successfully.
@@ -116,31 +120,31 @@ router.post('/create-product', createProduct);
  *                       type: number
  *                     Description:
  *                       type: string
+ *                     Quantity:
+ *                       type: number
  *                 message:
  *                   type: string
  *                   example: Product updated successfully!
  */
-router.put('/update-product', updateProduct);
+router.put('/update-product/:productId', updateProduct);
 
 /**
  * @swagger
- * /delete-product/{productId}:
+ * /api/delete-product/{productId}:
  *   delete:
  *     summary: Delete a product
  *     tags:
  *       - Products
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - name: productId
  *         in: path
  *         description: ID of the product to delete
  *         required: true
  *         type: integer
- *         format: int64
+ *         format: int
  *     responses:
  *       '200':
- *         description: Product deleted successfully.
+ *         description: Product deleted successfully   
  */
 router.delete('/delete-product/:productId', deleteProduct);
 

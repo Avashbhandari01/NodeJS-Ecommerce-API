@@ -30,16 +30,21 @@ module.exports = (sequelize, DataTypes) => {
             },
             Rating: {
                 type: DataTypes.FLOAT,
+                allowNull: true,
+            },
+            Quantity: {
+                type: DataTypes.INTEGER,
                 allowNull: false,
+                defaultValue: 0,
             },
             IsFavourite: {
                 type: DataTypes.BOOLEAN,
-                allowNull: false,
+                allowNull: true,
                 defaultValue: false,
             },
             IsPopular: {
                 type: DataTypes.BOOLEAN,
-                allowNull: false,
+                allowNull: true,
                 defaultValue: false,
             }
         },

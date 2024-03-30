@@ -4,6 +4,8 @@ const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const { sequelize, synchronizeModels } = require('./database/dbConfig');
 const { User } = require('./database/dbConfig');
+const bcrypt = require('bcryptjs');
+require('dotenv').config();
 
 const app = express();
 const port = 3000;
@@ -67,11 +69,14 @@ async function seedAdmin() {
             return;
         }
 
+        var password = process.env.PASSWORD;
+        const encryptedPassword = await bcrypt.hash(password, 10);
+
         // Create admin user
         await User.create({
             FullName: 'Admin User',
             Email: 'admin@gmail.com',
-            Password: 'admin',
+            Password: encryptedPassword,
             Roles: 'admin'
         });
 

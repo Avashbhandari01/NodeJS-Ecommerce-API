@@ -14,13 +14,13 @@ const getProducts = async (req, res) => {
 const createProduct = async (req, res) => {
     try {
         // Check if user is admin
-        if (req.User.Roles !== 'admin') {
-            return res.status(403).json({ error: "Only admin users can create products." });
-        }
+        // if (req.User.Roles !== 'admin') {
+        //     return res.status(403).json({ error: "Only admin users can create products." });
+        // }
 
-        const { Images, Colors, Title, Price, Description } = req.body;
+        const { Images, Colors, Title, Price, Description, Quantity } = req.body;
 
-        if (!Images || !Colors || !Title || !Price || !Description) {
+        if (!Images || !Colors || !Title || !Price || !Description || !Quantity) {
             return res.status(400).json({ error: "Please enter all the textfields!" });
         }
 
@@ -29,7 +29,8 @@ const createProduct = async (req, res) => {
             Colors,
             Title,
             Price,
-            Description
+            Description,
+            Quantity
         });
 
         res.status(200).json({ status: "ok", data: data, message: "Product created successfully!" });
@@ -43,21 +44,21 @@ const createProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
     try {
         // Check if user is admin
-        if (req.User.Roles !== 'admin') {
-            return res.status(403).json({ error: "Only admin users can update products." });
-        }
+        // if (req.User.Roles !== 'admin') {
+        //     return res.status(403).json({ error: "Only admin users can update products." });
+        // }
 
         const productId = req.params.productId; // Assuming productId is passed in the URL params
 
         // Retrieve existing product
-        const existingProduct = await Product.findById(productId);
+        const existingProduct = await Product.findByPk(productId);
 
         if (!existingProduct) {
             return res.status(404).json({ error: "Product not found." });
         }
 
         // Extract updated fields from request body
-        const { Images, Colors, Title, Price, Description } = req.body;
+        const { Images, Colors, Title, Price, Description, Quantity } = req.body;
 
         // Update product fields if provided
         if (Images) existingProduct.Images = Images;
@@ -65,6 +66,7 @@ const updateProduct = async (req, res) => {
         if (Title) existingProduct.Title = Title;
         if (Price) existingProduct.Price = Price;
         if (Description) existingProduct.Description = Description;
+        if (Quantity) existingProduct.Quantity = Quantity;
 
         // Save updated product
         const updatedProduct = await existingProduct.save();
@@ -80,11 +82,12 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
     try {
         // Check if user is admin
-        if (req.User.Roles !== 'admin') {
-            return res.status(403).json({ error: "Only admin users can delete products." });
-        }
+        // if (req.User.Roles !== 'admin') {
+        //     return res.status(403).json({ error: "Only admin users can delete products." });
+        // }
 
-        await Product.destory({ where: { id: req.params.productId } });
+        const productId = req.params.productId;
+        await Product.destroy({ where: { Id: productId } });
         return res.status(200).json({ status: "ok", message: "Product deleted successfully!" });
     } catch (error) {
         return res.status(500).json({ error: error.message });
