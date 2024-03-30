@@ -13,7 +13,6 @@ const port = 3000;
 // Middleware
 app.use(bodyParser.json());
 
-// Swagger options
 const swaggerOptions = {
     definition: {
         openapi: '3.0.0',
@@ -25,36 +24,19 @@ const swaggerOptions = {
         servers: [
             {
                 url: 'http://localhost:3000',
-            }
+            },
         ],
         components: {
             securitySchemes: {
-                Bearer: {
+                bearerAuth: {
                     type: 'http',
                     scheme: 'bearer',
                     bearerFormat: 'JWT',
-                }
-            }
+                },
+            },
         },
-        security: [{
-            bearerAuth: []
-        }]
     },
     apis: ['./routes/*.js'],
-    // Add security requirement for specific routes using a function
-    security: (path, method) => {
-        const securePaths = [
-            '/api/create-product',
-            '/api/update-product/{productId}',
-            '/api/delete-product/{productId}',
-        ];
-
-        if (securePaths.includes(path)) {
-            return [{ Bearer: [] }]; // Require Bearer token for secure paths
-        }
-
-        return undefined; // No security requirement for non-secure paths
-    }
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);

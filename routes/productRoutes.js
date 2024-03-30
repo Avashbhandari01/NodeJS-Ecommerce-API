@@ -143,9 +143,17 @@ router.put('/update-product/:productId', verifyAdmin, updateProduct);
  *         required: true
  *         type: integer
  *         format: int
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       '200':
  *         description: Product deleted successfully   
+ * securityDefinitions:
+ *   BearerAuth:
+ *     type: apiKey
+ *     name: Authorization
+ *     in: header
+ *     description: Enter your bearer token
  */
 router.delete('/delete-product/:productId', verifyAdmin, deleteProduct);
 
