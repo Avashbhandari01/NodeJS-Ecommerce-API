@@ -9,6 +9,7 @@ const sequelize = new Sequelize('EcommerceDB', 'postgres', 'admin', {
 // Define models
 const User = require('../models/userModel')(sequelize, DataTypes);
 const Product = require('../models/productModel')(sequelize, DataTypes);
+const ShoppingCart = require('../models/shoppingcarModel')(sequelize, DataTypes);
 
 // Synchronize models with the database
 async function synchronizeModels() {
@@ -21,4 +22,4 @@ async function synchronizeModels() {
     }
 }
 
-module.exports = { sequelize, User, Product, synchronizeModels };
+module.exports = { sequelize, User, Product, ShoppingCart, synchronizeModels };
