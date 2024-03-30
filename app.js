@@ -30,12 +30,9 @@ const swaggerOptions = {
         components: {
             securitySchemes: {
                 Bearer: {
-                    type: 'apiKey',
+                    type: 'http',
                     scheme: 'bearer',
                     bearerFormat: 'JWT',
-                    description: 'Enter "Bearer" followed by a space and then your valid JWT token.',
-                    name: 'Authorization',
-                    in: 'header',
                 }
             }
         },
@@ -44,6 +41,20 @@ const swaggerOptions = {
         }]
     },
     apis: ['./routes/*.js'],
+    // Add security requirement for specific routes using a function
+    security: (path, method) => {
+        const securePaths = [
+            '/api/create-product',
+            '/api/update-product/{productId}',
+            '/api/delete-product/{productId}',
+        ];
+
+        if (securePaths.includes(path)) {
+            return [{ Bearer: [] }]; // Require Bearer token for secure paths
+        }
+
+        return undefined; // No security requirement for non-secure paths
+    }
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);

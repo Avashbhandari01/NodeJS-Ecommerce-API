@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getProducts, createProduct, updateProduct, deleteProduct } = require('../controllers/productController');
+const { verifyAdmin } = require('../middleware/verifyToken');
 
 /**
  * @swagger
@@ -50,7 +51,7 @@ router.get('/products', getProducts);
  *       '200':
  *         description: Product created successfully.
  */
-router.post('/create-product', createProduct);
+router.post('/create-product', verifyAdmin, createProduct);
 
 /**
  * @swagger
@@ -126,7 +127,7 @@ router.post('/create-product', createProduct);
  *                   type: string
  *                   example: Product updated successfully!
  */
-router.put('/update-product/:productId', updateProduct);
+router.put('/update-product/:productId', verifyAdmin, updateProduct);
 
 /**
  * @swagger
@@ -146,6 +147,6 @@ router.put('/update-product/:productId', updateProduct);
  *       '200':
  *         description: Product deleted successfully   
  */
-router.delete('/delete-product/:productId', deleteProduct);
+router.delete('/delete-product/:productId', verifyAdmin, deleteProduct);
 
 module.exports = router;
