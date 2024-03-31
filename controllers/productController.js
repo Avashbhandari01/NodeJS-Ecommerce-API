@@ -13,11 +13,6 @@ const getProducts = async (req, res) => {
 // Create a product
 const createProduct = async (req, res) => {
     try {
-        // Check if user is admin
-        // if (req.User.Roles !== 'admin') {
-        //     return res.status(403).json({ error: "Only admin users can create products." });
-        // }
-
         const { Images, Colors, Title, Price, Description, Quantity } = req.body;
 
         if (!Images || !Colors || !Title || !Price || !Description || !Quantity) {
@@ -43,11 +38,6 @@ const createProduct = async (req, res) => {
 // Update a product
 const updateProduct = async (req, res) => {
     try {
-        // Check if user is admin
-        // if (req.User.Roles !== 'admin') {
-        //     return res.status(403).json({ error: "Only admin users can update products." });
-        // }
-
         const productId = req.params.productId; // Assuming productId is passed in the URL params
 
         // Retrieve existing product
@@ -81,11 +71,6 @@ const updateProduct = async (req, res) => {
 // Delete a product
 const deleteProduct = async (req, res) => {
     try {
-        // Check if user is admin
-        // if (req.User.Roles !== 'admin') {
-        //     return res.status(403).json({ error: "Only admin users can delete products." });
-        // }
-
         const productId = req.params.productId;
         await Product.destroy({ where: { Id: productId } });
         return res.status(200).json({ status: "ok", message: "Product deleted successfully!" });

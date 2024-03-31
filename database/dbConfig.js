@@ -10,6 +10,7 @@ const sequelize = new Sequelize('EcommerceDB', 'postgres', 'admin', {
 const User = require('../models/userModel')(sequelize, DataTypes);
 const Product = require('../models/productModel')(sequelize, DataTypes);
 const ShoppingCart = require('../models/shoppingcarModel')(sequelize, DataTypes);
+const Review = require('../models/reviewModel')(sequelize, DataTypes);
 
 // Synchronize models with the database
 async function synchronizeModels() {
@@ -22,4 +23,4 @@ async function synchronizeModels() {
     }
 }
 
-module.exports = { sequelize, User, Product, ShoppingCart, synchronizeModels };
+module.exports = { sequelize, User, Product, ShoppingCart, Review, synchronizeModels };
