@@ -13,9 +13,9 @@ const getProducts = async (req, res) => {
 // Create a product
 const createProduct = async (req, res) => {
     try {
-        const { Images, Colors, Title, Price, Description, Quantity } = req.body;
+        const { Images, Colors, Title, Price, Description, Quantity, IsPopular } = req.body;
 
-        if (!Images || !Colors || !Title || !Price || !Description || !Quantity) {
+        if (!Images || !Colors || !Title || !Price || !Description || !Quantity || !IsPopular) {
             return res.status(400).json({ error: "Please enter all the textfields!" });
         }
 
@@ -25,7 +25,8 @@ const createProduct = async (req, res) => {
             Title,
             Price,
             Description,
-            Quantity
+            Quantity,
+            IsPopular
         });
 
         res.status(200).json({ status: "ok", data: data, message: "Product created successfully!" });
@@ -57,6 +58,7 @@ const updateProduct = async (req, res) => {
         if (Price) existingProduct.Price = Price;
         if (Description) existingProduct.Description = Description;
         if (Quantity) existingProduct.Quantity = Quantity;
+        if (IsPopular) existingProduct.IsPopular = IsPopular;
 
         // Save updated product
         const updatedProduct = await existingProduct.save();

@@ -59,7 +59,7 @@ const loginUser = async (req, res) => {
 
         if (isPasswordValid) {
             const token = jwt.sign(
-                { id: userExists.Id, email: userExists.Email, fullName: userExists.FullName, photoURL: userExists.PhotoURL, role: userExists.Roles },
+                { id: userExists.Id, email: userExists.Email, fullName: userExists.FullName, photoURL: userExists.PhotoURL, role: userExists.Roles, address: userExists.Address, phoneNumber: userExists.PhoneNumber },
                 jwtSecret,
                 { expiresIn: 3600 }
             );
@@ -72,7 +72,6 @@ const loginUser = async (req, res) => {
         } else {
             return res.status(401).json({ error: "Invalid password!" });
         }
-
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }

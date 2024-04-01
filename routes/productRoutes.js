@@ -47,6 +47,9 @@ router.get('/products', getProducts);
  *                 type: string
  *               Quantity:
  *                 type: number
+ *               IsPopular:
+ *                 type: boolean
+ *                 default: false
  *     responses:
  *       '200':
  *         description: Product created successfully.
@@ -91,6 +94,9 @@ router.post('/create-product', verifyAdmin, createProduct);
  *                 type: string
  *               Quantity:
  *                 type: number
+ *               IsPopular:
+ *                 type: boolean
+ *                 default: false
  *     responses:
  *       '200':
  *         description: Product updated successfully.
@@ -123,6 +129,8 @@ router.post('/create-product', verifyAdmin, createProduct);
  *                       type: string
  *                     Quantity:
  *                       type: number
+ *                     IsPopular:
+ *                       type: boolean   
  *                 message:
  *                   type: string
  *                   example: Product updated successfully!
