@@ -40,7 +40,7 @@ router.get("/reviews/:productId", verifyUser, getReviewByProductId);
 
 /**
  * @swagger
- * /api/reviews/{userId}/{productId}:
+ * /api/reviews/{productId}:
  *   post:
  *     summary: Create a review for a product by a user
  *     description: Create a review for a specific product by a user identified by userId.
@@ -49,12 +49,6 @@ router.get("/reviews/:productId", verifyUser, getReviewByProductId);
  *     security:
  *       - bearerAuth: []
  *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: string
- *         description: The ID of the user who writes the review.
  *       - in: path
  *         name: productId
  *         required: true
@@ -75,7 +69,7 @@ router.get("/reviews/:productId", verifyUser, getReviewByProductId);
  *       '200':
  *         description: Item successfully added to the cart.
  */
-router.post("/reviews/:userId/:productId", createReview);
+router.post("/reviews/:productId", createReview);
 
 /**
  * @swagger

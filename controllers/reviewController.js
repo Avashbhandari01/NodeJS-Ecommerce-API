@@ -1,4 +1,7 @@
 const { Review } = require('../database/dbConfig');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const jwtSecret = process.env.JWT_SECRET;
 
 // Get all reviews
 const getReviews = async (req, res) => {
@@ -33,7 +36,14 @@ const getReviewByProductId = async (req, res) => {
 // Create a review
 const createReview = async (req, res) => {
     try {
-        const UserId = req.params.userId;
+        // Check if Authorization header exists
+        if (!req.headers.authorization) {
+            return res.status(401).json({ error: "Authorization header is missing" });
+        }
+
+        const token = req.headers['authorization'].replace("Bearer ", "");
+        const decodedToken = jwt.verify(token, jwtSecret);
+        const UserId = decodedToken.id;
         const ProductId = req.params.productId;
 
         const { Reviews } = req.body;

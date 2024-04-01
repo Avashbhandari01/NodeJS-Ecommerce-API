@@ -1,10 +1,21 @@
 const { ShoppingCart } = require('../database/dbConfig');
 const { Product } = require('../database/dbConfig');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const jwtSecret = process.env.JWT_SECRET;
 
 // Get all shopping cart items
 const getShoppingCartItems = async (req, res) => {
     try {
-        let userId = req.params.userId
+        // Check if Authorization header exists
+        if (!req.headers.authorization) {
+            return res.status(401).json({ error: "Authorization header is missing" });
+        }
+
+        const token = req.headers['authorization'].replace("Bearer ", "");
+        const decodedToken = jwt.verify(token, jwtSecret);
+        const userId = decodedToken.id;
+
         const shoppingCartItems = await ShoppingCart.findAll({ where: { UserId: userId }, include: [{ model: Product }] });
         res.status(200).json({ status: "ok", data: shoppingCartItems });
     } catch (error) {
@@ -15,7 +26,15 @@ const getShoppingCartItems = async (req, res) => {
 // Add items to cart
 const addToCart = async (req, res) => {
     try {
-        let UserId = req.params.userId
+        // Check if Authorization header exists
+        if (!req.headers.authorization) {
+            return res.status(401).json({ error: "Authorization header is missing" });
+        }
+
+        const token = req.headers['authorization'].replace("Bearer ", "");
+        const decodedToken = jwt.verify(token, jwtSecret);
+        const UserId = decodedToken.id;
+
         let ProductId = req.params.productId
 
         const { Quantity } = req.body;

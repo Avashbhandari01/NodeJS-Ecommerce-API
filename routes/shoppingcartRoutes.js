@@ -5,28 +5,22 @@ const { verifyUser } = require('../middleware/verifyToken');
 
 /**
  * @swagger
- * /api/shopping-cart/{userId}:
+ * /api/shopping-cart:
  *   get:
  *     summary: Get all shopping cart items
  *     tags:
  *       - Shopping Cart
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - name: userId
- *         in: path
- *         required: true
- *         type: integer
- *         description: ID of the user whose shopping cart items to retrieve
  *     responses:
  *       '200':
  *         description: Successfully Displayed
  */
-router.get('/shopping-cart/:userId', verifyUser, getShoppingCartItems);
+router.get('/shopping-cart', verifyUser, getShoppingCartItems);
 
 /**
  * @swagger
- * /api/add-to-cart/{userId}/{productId}:
+ * /api/add-to-cart/{productId}:
  *   post:
  *     summary: Add an item to the user's shopping cart.
  *     description: Add a product to the shopping cart of the specified user.
@@ -35,12 +29,6 @@ router.get('/shopping-cart/:userId', verifyUser, getShoppingCartItems);
  *     security:
  *       - bearerAuth: []
  *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: string
- *         description: The ID of the user who owns the shopping cart.
  *       - in: path
  *         name: productId
  *         required: true
@@ -62,7 +50,7 @@ router.get('/shopping-cart/:userId', verifyUser, getShoppingCartItems);
  *       '200':
  *         description: Item successfully added to the cart.
  */
-router.post('/add-to-cart/:userId/:productId', verifyUser, addToCart);
+router.post('/add-to-cart/:productId', verifyUser, addToCart);
 
 /**
  * @swagger
