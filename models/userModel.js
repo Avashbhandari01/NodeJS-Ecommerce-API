@@ -22,6 +22,13 @@ module.exports = (sequelize, DataTypes) => {
             },
             PhotoURL: {
                 type: DataTypes.STRING,
+                allowNull: true
+            },
+            Address: {
+                type: DataTypes.STRING,
+            },
+            PhoneNumber: {
+                type: DataTypes.BIGINT,
             },
             Roles: {
                 type: DataTypes.ENUM('user', 'admin'),

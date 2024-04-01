@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser } = require('../controllers/userController');
+const { registerUser, loginUser, getUser } = require('../controllers/userController');
+const { verifyUser } = require('../middleware/verifyToken');
 
 /**
  * @swagger
@@ -24,6 +25,10 @@ const { registerUser, loginUser } = require('../controllers/userController');
  *                 type: string
  *               PhotoURL:
  *                 type: string
+ *               Address:
+ *                 type: string
+ *               PhoneNumber:
+ *                 type: integer
  *     responses:
  *       '200':
  *         description: User registered successfully.
@@ -54,5 +59,28 @@ router.post('/register-user', registerUser);
  *         description: User logged in successfully.
  */
 router.post('/login-user', loginUser);
+
+/**
+ * @swagger
+ * /api/get-user/{userId}:
+ *   get:
+ *     summary: Retrieve a user by ID
+ *     tags:
+ *      - User
+ *     security:
+ *      - bearerAuth: []
+ *     description: Retrieve a user from the database by their ID.
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the user to retrieve
+ *     responses:
+ *       '200':
+ *         description: A user object
+ */
+router.get('/get-user/:userId', verifyUser, getUser);
 
 module.exports = router;

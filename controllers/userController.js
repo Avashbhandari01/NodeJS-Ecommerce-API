@@ -6,9 +6,9 @@ const jwtSecret = process.env.JWT_SECRET;
 
 // Register User
 const registerUser = async (req, res) => {
-    const { FullName, Email, Password, PhotoURL } = req.body;
+    const { FullName, Email, Password, PhotoURL, Address, PhoneNumber } = req.body;
 
-    if (!FullName || !Email || !Password || !PhotoURL) {
+    if (!FullName || !Email || !Password) {
         return res.status(400).json({ error: "Please enter all the textfields!" });
     }
 
@@ -25,7 +25,9 @@ const registerUser = async (req, res) => {
             FullName,
             Email,
             Password: encryptedPassword,
-            PhotoURL
+            PhotoURL,
+            Address,
+            PhoneNumber
         });
 
         res.status(200).json({ status: "ok", data: data, message: "User created successfully!" });
@@ -76,7 +78,20 @@ const loginUser = async (req, res) => {
     }
 }
 
+// Get User
+const getUser = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+
+        const user = await User.findOne({ where: { Id: userId } });
+        res.status(200).json({ status: "ok", data: user });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = {
     registerUser,
-    loginUser
+    loginUser,
+    getUser
 }
