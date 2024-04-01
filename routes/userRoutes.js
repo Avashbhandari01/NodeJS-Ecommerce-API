@@ -62,7 +62,7 @@ router.post('/login-user', loginUser);
 
 /**
  * @swagger
- * /api/get-user/{userId}:
+ * /api/get-user:
  *   get:
  *     summary: Retrieve a user by ID
  *     tags:
@@ -70,17 +70,10 @@ router.post('/login-user', loginUser);
  *     security:
  *      - bearerAuth: []
  *     description: Retrieve a user from the database by their ID.
- *     parameters:
- *       - in: path
- *         name: userId
- *         schema:
- *           type: integer
- *         required: true
- *         description: ID of the user to retrieve
  *     responses:
  *       '200':
  *         description: A user object
  */
-router.get('/get-user/:userId', verifyUser, getUser);
+router.get('/get-user', verifyUser, getUser);
 
 module.exports = router;

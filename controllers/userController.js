@@ -81,7 +81,15 @@ const loginUser = async (req, res) => {
 // Get User
 const getUser = async (req, res) => {
     try {
-        const userId = req.params.userId;
+        // Check if Authorization header exists
+        if (!req.headers.authorization) {
+            return res.status(401).json({ error: "Authorization header is missing" });
+        }
+
+        const token = req.headers['authorization'].replace("Bearer ", "");
+
+        const decodedToken = jwt.verify(token, jwtSecret);
+        const userId = decodedToken.id;
 
         const user = await User.findOne({ where: { Id: userId } });
         res.status(200).json({ status: "ok", data: user });
