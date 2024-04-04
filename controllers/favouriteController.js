@@ -1,4 +1,5 @@
 const { Favourite } = require('../database/dbConfig');
+const { Product } = require('../database/dbConfig');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const jwtSecret = process.env.JWT_SECRET;
@@ -16,7 +17,7 @@ const getFavourites = async (req, res) => {
         const decodedToken = jwt.verify(token, jwtSecret);
         const userId = decodedToken.id;
 
-        const favourites = await Favourite.findAll({ where: { UserId: userId } });
+        const favourites = await Favourite.findAll({ where: { UserId: userId }, include: [{ model: Product }] });
         res.status(200).json({ status: "ok", data: favourites });
     } catch (error) {
         return res.status(500).json({ error: error.message });
