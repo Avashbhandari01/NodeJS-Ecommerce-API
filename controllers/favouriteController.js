@@ -38,7 +38,6 @@ const addFavourite = async (req, res) => {
         const UserId = decodedToken.id;
 
         const ProductId = req.params.productId;
-        console.log(ProductId);
 
         const favourite = await Favourite.create({
             UserId,

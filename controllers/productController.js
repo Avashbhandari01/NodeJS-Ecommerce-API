@@ -49,7 +49,7 @@ const updateProduct = async (req, res) => {
         }
 
         // Extract updated fields from request body
-        const { Images, Colors, Title, Price, Description, Quantity } = req.body;
+        const { Images, Colors, Title, Price, Description, Quantity, IsPopular } = req.body;
 
         // Update product fields if provided
         if (Images) existingProduct.Images = Images;
