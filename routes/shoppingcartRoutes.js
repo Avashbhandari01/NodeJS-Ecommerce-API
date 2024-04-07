@@ -20,7 +20,7 @@ router.get('/shopping-cart', verifyUser, getShoppingCartItems);
 
 /**
  * @swagger
- * /api/add-to-cart/{productId}:
+ * /api/add-to-cart:
  *   post:
  *     summary: Add an item to the user's shopping cart.
  *     description: Add a product to the shopping cart of the specified user.
@@ -28,20 +28,14 @@ router.get('/shopping-cart', verifyUser, getShoppingCartItems);
  *       - Shopping Cart
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: productId
- *         required: true
- *         schema:
- *           type: string
- *         description: The ID of the product to be added to the shopping cart.
  *     requestBody:
- *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
  *             properties:
+ *               ProductId:
+ *                  type: integer
  *               Quantity:
  *                 type: integer
  *                 description: The quantity of the product to add to the cart.
@@ -50,7 +44,7 @@ router.get('/shopping-cart', verifyUser, getShoppingCartItems);
  *       '200':
  *         description: Item successfully added to the cart.
  */
-router.post('/add-to-cart/:productId', verifyUser, addToCart);
+router.post('/add-to-cart', verifyUser, addToCart);
 
 /**
  * @swagger

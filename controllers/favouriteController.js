@@ -37,7 +37,7 @@ const addFavourite = async (req, res) => {
         const decodedToken = jwt.verify(token, jwtSecret);
         const UserId = decodedToken.id;
 
-        const ProductId = req.params.productId;
+        const { ProductId } = req.body;
 
         // Check if the product already exists in the user's favorites
         const existingFavourite = await Favourite.findOne({

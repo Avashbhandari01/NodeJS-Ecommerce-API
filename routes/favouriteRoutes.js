@@ -21,26 +21,27 @@ router.get('/get-favourites', verifyUser, getFavourites);
 
 /**
  * @swagger
- * /api/add-favourite/{productId}:
+ * /api/add-favourite:
  *   post:
  *     summary: Add a product to favourites.
  *     tags:
  *       - Favourites
  *     description: Add a product to favourites for the authenticated user.
- *     parameters:
- *       - in: path
- *         name: productId
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID of the product to add to favourites.
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               ProductId:
+ *                 type: integer
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Returns the newly added favourite.
  */
-router.post('/add-favourite/:productId', verifyUser, addFavourite);
+router.post('/add-favourite', verifyUser, addFavourite);
 
 /**
  * @swagger

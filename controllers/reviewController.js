@@ -44,7 +44,8 @@ const createReview = async (req, res) => {
         const token = req.headers['authorization'].replace("Bearer ", "");
         const decodedToken = jwt.verify(token, jwtSecret);
         const UserId = decodedToken.id;
-        const ProductId = req.params.productId;
+
+        const { ProductId } = req.body;
 
         const { Reviews } = req.body;
 

@@ -42,9 +42,9 @@ const addToCart = async (req, res) => {
         const decodedToken = jwt.verify(token, jwtSecret);
         const UserId = decodedToken.id;
 
-        let ProductId = req.params.productId
+        //let ProductId = req.params.productId
 
-        const { Quantity } = req.body;
+        const { ProductId, Quantity } = req.body;
 
         if (!ProductId || !Quantity || !UserId) {
             return res.status(400).json({ error: "Please enter all the textfields!" });
