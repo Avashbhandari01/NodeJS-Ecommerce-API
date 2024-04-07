@@ -39,6 +39,18 @@ const addFavourite = async (req, res) => {
 
         const ProductId = req.params.productId;
 
+        // Check if the product already exists in the user's favorites
+        const existingFavourite = await Favourite.findOne({
+            where: {
+                UserId,
+                ProductId
+            }
+        });
+
+        if (existingFavourite) {
+            return res.status(400).json({ error: "Product already exists in favorites" });
+        }
+
         const favourite = await Favourite.create({
             UserId,
             ProductId,

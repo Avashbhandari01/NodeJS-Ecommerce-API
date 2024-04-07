@@ -35,7 +35,8 @@ const placeOrder = async (req, res) => {
 
         // Transfer items from shopping cart to order details
         await Promise.all(shoppingCartItems.map(async (item) => {
-            await order.addProduct(item.Product, { through: { quantity: item.Quantity } });
+            // Ensure that Quantity exists in ShoppingCart model and it's correctly associated with Product model
+            await order.addProduct(item.Product.Id, { through: { quantity: item.Quantity } });
         }));
 
         // Clear the shopping cart

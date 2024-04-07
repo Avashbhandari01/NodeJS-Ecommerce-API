@@ -17,7 +17,14 @@ const getShoppingCartItems = async (req, res) => {
         const userId = decodedToken.id;
 
         const shoppingCartItems = await ShoppingCart.findAll({ where: { UserId: userId }, include: [{ model: Product }] });
-        res.status(200).json({ status: "ok", data: shoppingCartItems });
+
+        // Calculate total price
+        let totalPrice = 0;
+        shoppingCartItems.forEach(item => {
+            totalPrice += item.Quantity * item.Product.Price;
+        });
+
+        res.status(200).json({ status: "ok", data: shoppingCartItems, TotalPrice: totalPrice });
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
@@ -43,14 +50,29 @@ const addToCart = async (req, res) => {
             return res.status(400).json({ error: "Please enter all the textfields!" });
         }
 
-        const data = await ShoppingCart.create({
-            ProductId,
-            Quantity,
-            UserId
+        // Check if the product already exists in the user's cart
+        let existingCartItem = await ShoppingCart.findOne({
+            where: {
+                UserId,
+                ProductId
+            }
         });
 
-        res.status(200).json({ status: "ok", data: data, message: "Item added to cart successfully!" });
+        if (existingCartItem) {
+            // If the product already exists, update the quantity
+            existingCartItem.Quantity += Quantity;
+            await existingCartItem.save();
+            return res.status(200).json({ status: "ok", data: existingCartItem, message: "Item quantity updated in cart successfully!" });
+        } else {
+            // If the product doesn't exist, create a new entry
+            const data = await ShoppingCart.create({
+                ProductId,
+                Quantity,
+                UserId
+            });
 
+            res.status(200).json({ status: "ok", data: data, message: "Item added to cart successfully!" });
+        }
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
