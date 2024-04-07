@@ -48,4 +48,25 @@ const placeOrder = async (req, res) => {
     }
 };
 
-module.exports = { placeOrder };
+// Get all orders for a user
+const getOrders = async (req, res) => {
+    try {
+        // Check if Authorization header exists
+        if (!req.headers.authorization) {
+            return res.status(401).json({ error: "Authorization header is missing" });
+        }
+
+        const token = req.headers['authorization'].replace("Bearer ", "");
+        const decodedToken = jwt.verify(token, jwtSecret);
+        const userId = decodedToken.id;
+
+        // Find all orders for the user
+        const orders = await Order.findAll({ where: { UserId: userId }, include: [{ model: Product }] });
+
+        res.status(200).json({ orders });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
+module.exports = { placeOrder, getOrders };
