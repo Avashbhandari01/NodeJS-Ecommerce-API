@@ -6,7 +6,7 @@ const { verifyUser } = require('../middleware/verifyToken');
 /**
  * @swagger
  * /api/placeOrder:
- *   get:
+ *   post:
  *     summary: Place an order
  *     tags:
  *       - Orders
@@ -16,7 +16,7 @@ const { verifyUser } = require('../middleware/verifyToken');
  *       '200':
  *         description: Successful operation
  */
-router.get('/placeOrder', verifyUser, placeOrder);
+router.post('/placeOrder', verifyUser, placeOrder);
 
 /**
  * @swagger
