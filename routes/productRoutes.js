@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getProducts, createProduct, updateProduct, deleteProduct } = require('../controllers/productController');
+const { getProducts, createProduct, updateProduct, deleteProduct, getPopularProducts } = require('../controllers/productController');
 const { verifyAdmin } = require('../middleware/verifyToken');
 
 /**
@@ -164,5 +164,19 @@ router.put('/update-product/:productId', verifyAdmin, updateProduct);
  *     description: Enter your bearer token
  */
 router.delete('/delete-product/:productId', verifyAdmin, deleteProduct);
+
+/**
+ * @swagger
+ * /api/get-popular-products:
+ *   get:
+ *     summary: Retrieve popular products
+ *     description: Retrieve a list of popular products.
+ *     responses:
+ *       200:
+ *         description: A list of popular products.
+*     tags:
+ *       - Products
+ */
+router.get('/get-popular-products', getPopularProducts);
 
 module.exports = router;

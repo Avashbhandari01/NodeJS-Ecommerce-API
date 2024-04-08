@@ -55,6 +55,7 @@ app.use("/api", require("./routes/shoppingcartRoutes"));
 app.use("/api", require("./routes/reviewRoutes"));
 app.use("/api", require("./routes/favouriteRoutes"));
 app.use("/api", require("./routes/orderRoutes"));
+app.use("/api", require("./routes/notificationRoutes"));
 
 // Seed admin user
 async function seedAdmin() {

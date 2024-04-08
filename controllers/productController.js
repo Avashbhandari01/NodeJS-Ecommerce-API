@@ -81,4 +81,14 @@ const deleteProduct = async (req, res) => {
     }
 }
 
-module.exports = { getProducts, createProduct, updateProduct, deleteProduct }
+// Get all the popular products
+const getPopularProducts = async (req, res) => {
+    try {
+        const popularProducts = await Product.findAll({ where: { IsPopular: true } });
+        res.status(200).json({ status: "ok", data: popularProducts });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
+module.exports = { getProducts, createProduct, updateProduct, deleteProduct, getPopularProducts }

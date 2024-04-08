@@ -13,6 +13,7 @@ const ShoppingCart = require('../models/shoppingcarModel')(sequelize, DataTypes)
 const Review = require('../models/reviewModel')(sequelize, DataTypes);
 const Favourite = require('../models/favouritesModel')(sequelize, DataTypes);
 const Order = require('../models/orderModel')(sequelize, DataTypes);
+const Notification = require('../models/notificationModel')(sequelize, DataTypes);
 
 // Synchronize models with the database
 async function synchronizeModels() {
@@ -25,4 +26,4 @@ async function synchronizeModels() {
     }
 }
 
-module.exports = { sequelize, User, Product, ShoppingCart, Review, Favourite, Order, synchronizeModels };
+module.exports = { sequelize, User, Product, ShoppingCart, Review, Favourite, Order, Notification, synchronizeModels };
