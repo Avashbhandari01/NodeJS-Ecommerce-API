@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { placeOrder, getOrders } = require('../controllers/orderController');
-const { verifyUser } = require('../middleware/verifyToken');
+const { placeOrder, getOrders, getAllOrders, updateOrder } = require('../controllers/orderController');
+const { verifyUser, verifyAdmin } = require('../middleware/verifyToken');
 
 /**
  * @swagger
@@ -12,9 +12,17 @@ const { verifyUser } = require('../middleware/verifyToken');
  *       - Orders
  *     security:
  *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               shippingAddress:
+ *                 type: string
  *     responses:
  *       '200':
- *         description: Successful operation
+ *         description: Order placed successfully
  */
 router.post('/placeOrder', verifyUser, placeOrder);
 
@@ -33,5 +41,55 @@ router.post('/placeOrder', verifyUser, placeOrder);
  *         description: A list of orders for the authenticated user
  */
 router.get('/getOrders', verifyUser, getOrders);
+
+/**
+ * @swagger
+ * /api/getAllOrders:
+ *   get:
+ *     summary: Get all orders for a admin panel
+ *     tags:
+ *       - Orders
+ *     description: Retrieve all orders associated with the authenticated user.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of orders for the authenticated user
+ */
+router.get('/getAllOrders', verifyAdmin, getAllOrders);
+
+/**
+ * @swagger
+ * /api/updateOrder/{orderId}:
+ *   put:
+ *     summary: Update an existing order
+ *     description: Update an existing order by providing orderId
+ *     tags:
+ *       - Orders
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: orderId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the order to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               ShippingAddress:
+ *                 type: string
+ *               Status:
+ *                  type: string
+ *     responses:
+ *       '200':
+ *         description: Successful operation
+ */
+router.put('/updateOrder/:orderId', verifyAdmin, updateOrder);
 
 module.exports = router;

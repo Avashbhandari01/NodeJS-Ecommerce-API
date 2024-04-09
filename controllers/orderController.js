@@ -14,7 +14,8 @@ const placeOrder = async (req, res) => {
         const token = req.headers['authorization'].replace("Bearer ", "");
         const decodedToken = jwt.verify(token, jwtSecret);
         const userId = decodedToken.id;
-        const shippingAddress = decodedToken.address;
+
+        const { shippingAddress } = req.body;
 
         // Find all shopping cart items for the user
         const shoppingCartItems = await ShoppingCart.findAll({ where: { UserId: userId }, include: [{ model: Product }] });
@@ -69,4 +70,44 @@ const getOrders = async (req, res) => {
     }
 }
 
-module.exports = { placeOrder, getOrders };
+// Get all orders for a admin
+const getAllOrders = async (req, res) => {
+    try {
+        const orders = await Order.findAll({ include: [{ model: Product }] });
+
+        res.status(200).json({ orders });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
+// Update order for a admin
+const updateOrder = async (req, res) => {
+    try {
+        const orderId = req.params.orderId;
+
+        // Retrieve existing order
+        const existingOrder = await Order.findByPk(orderId);
+
+        if (!existingOrder) {
+            return res.status(404).json({ error: "Order not found." });
+        }
+
+        // Extract updated fields from request body
+        const { Status, ShippingAddress } = req.body;
+
+        // Update order fields if provided
+        if (Status) existingOrder.Status = Status;
+        if (ShippingAddress) existingOrder.ShippingAddress = ShippingAddress;
+
+        // Save updated order
+        const updatedOrder = await existingOrder.save();
+
+        res.status(200).json({ status: "ok", data: updatedOrder, message: "Order updated successfully!" });
+
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
+module.exports = { placeOrder, getOrders, getAllOrders, updateOrder };

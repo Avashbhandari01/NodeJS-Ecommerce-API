@@ -34,6 +34,11 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.ENUM('user', 'admin'),
                 allowNull: false,
                 defaultValue: 'user'
+            },
+            EmailConfirmed: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: false
             }
         },
         {

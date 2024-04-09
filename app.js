@@ -75,7 +75,8 @@ async function seedAdmin() {
             FullName: 'Admin User',
             Email: 'admin@gmail.com',
             Password: encryptedPassword,
-            Roles: 'admin'
+            Roles: 'admin',
+            EmailConfirmed: true
         });
 
         console.log('Admin user seeded successfully.');
