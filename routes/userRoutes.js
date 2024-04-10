@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { registerUser, loginUser, getUser } = require('../controllers/userController');
-const { verifyUser } = require('../middleware/verifyToken');
+const { verifyUser, verifyConfirmCode } = require('../middleware/verifyToken');
 
 /**
  * @swagger
@@ -75,5 +75,27 @@ router.post('/login-user', loginUser);
  *         description: A user object
  */
 router.get('/get-user', verifyUser, getUser);
+
+/**
+ * @swagger
+ * /verify/{token}:
+ *   get:
+ *     summary: Verify email confirmation token.
+ *     tags:
+ *      - User
+ *     description: |
+ *       Verifies the email confirmation token sent to the user's email and marks the user's email as confirmed if the token is valid.
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         description: The token sent to the user's email for verification.
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Email verified successfully.
+ */
+router.get('/verify/:token', verifyConfirmCode)
 
 module.exports = router;

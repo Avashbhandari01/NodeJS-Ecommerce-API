@@ -52,6 +52,10 @@ const loginUser = async (req, res) => {
             return res.status(404).json({ error: "User does not exist!" });
         }
 
+        // if (!userExists.EmailConfirmed) {
+        //     return res.status(401).json({ error: "Please confirm your email address!" });
+        // }
+
         const isPasswordValid = await bcrypt.compare(
             Password,
             userExists.Password

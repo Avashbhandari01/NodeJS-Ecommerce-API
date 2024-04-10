@@ -1,4 +1,4 @@
-const { ShoppingCart, Order, Product } = require('../database/dbConfig');
+const { ShoppingCart, Order, Product, User } = require('../database/dbConfig');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const jwtSecret = process.env.JWT_SECRET;
@@ -31,7 +31,7 @@ const placeOrder = async (req, res) => {
             UserId: userId,
             TotalPrice: totalPrice,
             ShippingAddress: shippingAddress,
-            Status: "Completed"
+            Status: "Pending"
         });
 
         // Transfer items from shopping cart to order details
@@ -73,7 +73,7 @@ const getOrders = async (req, res) => {
 // Get all orders for a admin
 const getAllOrders = async (req, res) => {
     try {
-        const orders = await Order.findAll({ include: [{ model: Product }] });
+        const orders = await Order.findAll({ include: [{ model: Product }, { model: User }] });
 
         res.status(200).json({ orders });
     } catch (error) {

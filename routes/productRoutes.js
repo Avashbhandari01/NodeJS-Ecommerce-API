@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getProducts, createProduct, updateProduct, deleteProduct, getPopularProducts } = require('../controllers/productController');
+const { getProducts, createProduct, updateProduct, deleteProduct, getPopularProducts, getProductsByName } = require('../controllers/productController');
 const { verifyAdmin } = require('../middleware/verifyToken');
 
 /**
@@ -174,9 +174,29 @@ router.delete('/delete-product/:productId', verifyAdmin, deleteProduct);
  *     responses:
  *       200:
  *         description: A list of popular products.
-*     tags:
+ *     tags:
  *       - Products
  */
 router.get('/get-popular-products', getPopularProducts);
+
+/**
+ * @swagger
+ * /api/get-product-by-name/{productName}:
+ *   get:
+ *     summary: Get all products by name
+ *     description: Retrieve all products with a specific name.
+ *     parameters:
+ *       - in: path
+ *         name: productName
+ *         schema:
+ *           type: string
+ *         description: The name of the product to search for.
+ *     responses:
+ *       200:
+ *         description: A list of products matching the provided name
+ *     tags:
+ *      - Products
+ */
+router.get('/get-product-by-name/:productName', getProductsByName);
 
 module.exports = router;

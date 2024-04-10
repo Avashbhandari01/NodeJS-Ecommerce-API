@@ -91,4 +91,15 @@ const getPopularProducts = async (req, res) => {
     }
 }
 
-module.exports = { getProducts, createProduct, updateProduct, deleteProduct, getPopularProducts }
+// Get all products from product name
+const getProductsByName = async (req, res) => {
+    try {
+        const productName = req.params.productName;
+        const products = await Product.findAll({ where: { Title: productName } });
+        res.status(200).json({ status: "ok", data: products });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
+module.exports = { getProducts, createProduct, updateProduct, deleteProduct, getPopularProducts, getProductsByName }
