@@ -116,5 +116,4 @@ const upload = multer({ storage: storage });
 // Route for uploading profile picture
 router.post('/uploadProfilePic', upload.single('profilePic'), uploadProfilePic);
 
-
 module.exports = router;
