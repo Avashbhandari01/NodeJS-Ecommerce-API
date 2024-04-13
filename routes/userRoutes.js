@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser, getUser } = require('../controllers/userController');
-const { verifyUser, verifyConfirmCode } = require('../middleware/verifyToken');
+const { registerUser, loginUser, getUser, updateUser } = require('../controllers/userController');
+const { verifyUser } = require('../middleware/verifyToken');
 
 /**
  * @swagger
@@ -22,8 +22,6 @@ const { verifyUser, verifyConfirmCode } = require('../middleware/verifyToken');
  *                 type: string
  *                 format: email
  *               Password:
- *                 type: string
- *               PhotoURL:
  *                 type: string
  *               Address:
  *                 type: string
@@ -75,5 +73,32 @@ router.post('/login-user', loginUser);
  *         description: A user object
  */
 router.get('/get-user', verifyUser, getUser);
+
+/**
+ * @swagger
+ * /api/update-user:
+ *   put:
+ *     summary: Update user profile
+ *     tags:
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               FullName:
+ *                 type: string
+ *               Address:
+ *                 type: string
+ *               PhoneNumber:
+ *                 type: integer
+ *     responses:
+ *       '200':
+ *         description: User profile updated successfully
+ */
+router.put('/update-user', verifyUser, updateUser);
 
 module.exports = router;

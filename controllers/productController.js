@@ -102,4 +102,24 @@ const getProductsByName = async (req, res) => {
     }
 }
 
-module.exports = { getProducts, createProduct, updateProduct, deleteProduct, getPopularProducts, getProductsByName }
+// Get total number of all the products
+const getTotalProducts = async (req, res) => {
+    try {
+        const totalProducts = await Product.count();
+        res.status(200).json({ data: totalProducts });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
+// Get popular products count
+const getPopularProductsCount = async (req, res) => {
+    try {
+        const popularProductsCount = await Product.count({ where: { IsPopular: true } });
+        res.status(200).json({ data: popularProductsCount });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
+module.exports = { getProducts, createProduct, updateProduct, deleteProduct, getPopularProducts, getProductsByName, getTotalProducts, getPopularProductsCount }

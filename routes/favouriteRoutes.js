@@ -5,7 +5,7 @@ const { verifyUser } = require('../middleware/verifyToken');
 
 /**
  * @swagger
- * /api//get-favourites:
+ * /api/get-favourites:
  *   get:
  *     summary: Get all favourites for a user.
  *     tags:

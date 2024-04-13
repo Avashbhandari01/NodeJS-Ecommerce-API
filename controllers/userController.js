@@ -7,7 +7,7 @@ const nodemailer = require('nodemailer');
 
 // Register User
 const registerUser = async (req, res) => {
-    const { FullName, Email, Password, PhotoURL, Address, PhoneNumber } = req.body;
+    const { FullName, Email, Password, Address, PhoneNumber } = req.body;
 
     if (!FullName || !Email || !Password) {
         return res.status(400).json({ error: "Please enter all the textfields!" });
@@ -26,7 +26,6 @@ const registerUser = async (req, res) => {
             FullName,
             Email,
             Password: encryptedPassword,
-            PhotoURL,
             Address,
             PhoneNumber
         });
@@ -141,8 +140,81 @@ const getUser = async (req, res) => {
     }
 }
 
+// Update User
+const updateUser = async (req, res) => {
+    try {
+        // Check if Authorization header exists
+        if (!req.headers.authorization) {
+            return res.status(401).json({ error: "Authorization header is missing" });
+        }
+
+        const token = req.headers['authorization'].replace("Bearer ", "");
+
+        const decodedToken = jwt.verify(token, jwtSecret);
+        const userId = decodedToken.id;
+
+        // Retrieve existing user
+        const existingUser = await User.findByPk(userId);
+
+        if (!existingUser) {
+            return res.status(404).json({ error: "User not found." });
+        }
+
+        // Extract updated fields from request body
+        const { FullName, Address, PhoneNumber } = req.body;
+
+        // Update user fields if provided
+        if (FullName) existingUser.FullName = FullName;
+        if (Address) existingUser.Address = Address;
+        if (PhoneNumber) existingUser.PhoneNumber = PhoneNumber;
+
+        // Save updated user
+        const updatedUser = await existingUser.save();
+
+        res.status(200).json({ status: "ok", data: updatedUser, message: "User updated successfully!" });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
+// Upload Profile Picture
+const uploadProfilePic = async (req, res) => {
+    try {
+        // Check if Authorization header exists
+        if (!req.headers.authorization) {
+            return res.status(401).json({ error: "Authorization header is missing" });
+        }
+
+        const token = req.headers['authorization'].replace("Bearer ", "");
+
+        const decodedToken = jwt.verify(token, jwtSecret);
+        const userId = decodedToken.id;
+
+        // Retrieve existing user
+        const existingUser = await User.findByPk(userId);
+
+        if (!existingUser) {
+            return res.status(404).json({ error: "User not found." });
+        }
+
+        // If there's a file uploaded, handle it
+        if (req.file) {
+            existingUser.PhotoURL = req.file.path;
+            // Save updated user with profile picture
+            await existingUser.save();
+            return res.status(200).json({ status: "ok", message: "Profile picture updated successfully!" });
+        } else {
+            return res.status(400).json({ error: "No file uploaded" });
+        }
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = {
     registerUser,
     loginUser,
-    getUser
+    getUser,
+    updateUser,
+    uploadProfilePic
 }

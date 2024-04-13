@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getProducts, createProduct, updateProduct, deleteProduct, getPopularProducts, getProductsByName } = require('../controllers/productController');
+const { getProducts, createProduct, updateProduct, deleteProduct, getPopularProducts, getProductsByName, getTotalProducts, getPopularProductsCount } = require('../controllers/productController');
 const { verifyAdmin } = require('../middleware/verifyToken');
 
 /**
@@ -198,5 +198,37 @@ router.get('/get-popular-products', getPopularProducts);
  *      - Products
  */
 router.get('/get-product-by-name/:productName', getProductsByName);
+
+/**
+ * @swagger
+ * /api/total-products:
+ *   get:
+ *     summary: Retrieve total products count
+ *     description: Retrieve a count of total products.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A count of total products.
+ *     tags:
+ *       - Products
+ */
+router.get('/total-products', verifyAdmin, getTotalProducts);
+
+/**
+ * @swagger
+ * /api/popular-products-count:
+ *   get:
+ *     summary: Retrieve popular products count
+ *     description: Retrieve a count of popular products.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A count of popular products.
+ *     tags:
+ *       - Products
+ */
+router.get('/popular-products-count', verifyAdmin, getPopularProductsCount);
 
 module.exports = router;

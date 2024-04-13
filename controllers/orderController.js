@@ -110,4 +110,14 @@ const updateOrder = async (req, res) => {
     }
 }
 
-module.exports = { placeOrder, getOrders, getAllOrders, updateOrder };
+// Get total order count
+const getOrderCount = async (req, res) => {
+    try {
+        const orderCount = await Order.count();
+        res.status(200).json({ orderCount });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
+module.exports = { placeOrder, getOrders, getAllOrders, updateOrder, getOrderCount };

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { placeOrder, getOrders, getAllOrders, updateOrder } = require('../controllers/orderController');
+const { placeOrder, getOrders, getAllOrders, updateOrder, getOrderCount } = require('../controllers/orderController');
 const { verifyUser, verifyAdmin } = require('../middleware/verifyToken');
 
 /**
@@ -91,5 +91,21 @@ router.get('/getAllOrders', verifyAdmin, getAllOrders);
  *         description: Successful operation
  */
 router.put('/updateOrder/:orderId', verifyAdmin, updateOrder);
+
+/**
+ * @swagger
+ * /api/getOrderCount:
+ *   get:
+ *     summary: Retrieve total orders count
+ *     description: Retrieve a count of total orders.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A count of total orders.
+ *     tags:
+ *       - Orders
+ */
+router.get('/getOrderCount', verifyAdmin, getOrderCount);
 
 module.exports = router;
