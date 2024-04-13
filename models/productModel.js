@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.ARRAY(DataTypes.STRING),
                 allowNull: false,
             },
+            ARImage: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
             Colors: {
                 type: DataTypes.ARRAY(DataTypes.STRING),
                 allowNull: false,

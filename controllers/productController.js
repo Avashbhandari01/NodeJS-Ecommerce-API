@@ -1,4 +1,4 @@
-const { Product } = require('../database/dbConfig');
+const { Product, Order } = require('../database/dbConfig');
 
 // Get all products
 const getProducts = async (req, res) => {
@@ -13,7 +13,7 @@ const getProducts = async (req, res) => {
 // Create a product
 const createProduct = async (req, res) => {
     try {
-        const { Images, Colors, Title, Price, Description, Quantity, IsPopular } = req.body;
+        const { Images, ARImage, Colors, Title, Price, Description, Quantity, IsPopular, } = req.body;
 
         if (!Images || !Colors || !Title || !Price || !Description || !Quantity || !IsPopular) {
             return res.status(400).json({ error: "Please enter all the textfields!" });
@@ -21,6 +21,7 @@ const createProduct = async (req, res) => {
 
         const data = await Product.create({
             Images,
+            ARImage,
             Colors,
             Title,
             Price,
@@ -49,10 +50,11 @@ const updateProduct = async (req, res) => {
         }
 
         // Extract updated fields from request body
-        const { Images, Colors, Title, Price, Description, Quantity, IsPopular } = req.body;
+        const { Images, ARImage, Colors, Title, Price, Description, Quantity, IsPopular } = req.body;
 
         // Update product fields if provided
         if (Images) existingProduct.Images = Images;
+        if (ARImage) existingProduct.ARImage = ARImage;
         if (Colors) existingProduct.Colors = Colors;
         if (Title) existingProduct.Title = Title;
         if (Price) existingProduct.Price = Price;
@@ -102,24 +104,16 @@ const getProductsByName = async (req, res) => {
     }
 }
 
-// Get total number of all the products
-const getTotalProducts = async (req, res) => {
+// Get total number of all products and count of popular products
+const getProductCounts = async (req, res) => {
     try {
         const totalProducts = await Product.count();
-        res.status(200).json({ data: totalProducts });
-    } catch (error) {
-        return res.status(500).json({ error: error.message });
-    }
-}
-
-// Get popular products count
-const getPopularProductsCount = async (req, res) => {
-    try {
         const popularProductsCount = await Product.count({ where: { IsPopular: true } });
-        res.status(200).json({ data: popularProductsCount });
+        const totalOrders = await Order.count();
+        res.status(200).json({ TotalProducts: totalProducts, PopularProducts: popularProductsCount, TotalOrders: totalOrders });
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
 }
 
-module.exports = { getProducts, createProduct, updateProduct, deleteProduct, getPopularProducts, getProductsByName, getTotalProducts, getPopularProductsCount }
+module.exports = { getProducts, createProduct, updateProduct, deleteProduct, getPopularProducts, getProductsByName, getProductCounts }

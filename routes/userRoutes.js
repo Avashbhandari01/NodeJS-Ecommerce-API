@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser, getUser, updateUser } = require('../controllers/userController');
+const { registerUser, loginUser, getUser, updateUser, uploadProfilePic } = require('../controllers/userController');
 const { verifyUser } = require('../middleware/verifyToken');
+const multer = require('multer');
 
 /**
  * @swagger
@@ -100,5 +101,20 @@ router.get('/get-user', verifyUser, getUser);
  *         description: User profile updated successfully
  */
 router.put('/update-user', verifyUser, updateUser);
+
+// Multer configuration
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/profile-pics'); // Specify the destination folder for profile pictures
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname); // Use the original filename for profile pictures
+    }
+});
+const upload = multer({ storage: storage });
+
+// Route for uploading profile picture
+router.post('/uploadProfilePic', upload.single('profilePic'), uploadProfilePic);
+
 
 module.exports = router;

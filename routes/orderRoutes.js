@@ -92,20 +92,4 @@ router.get('/getAllOrders', verifyAdmin, getAllOrders);
  */
 router.put('/updateOrder/:orderId', verifyAdmin, updateOrder);
 
-/**
- * @swagger
- * /api/getOrderCount:
- *   get:
- *     summary: Retrieve total orders count
- *     description: Retrieve a count of total orders.
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: A count of total orders.
- *     tags:
- *       - Orders
- */
-router.get('/getOrderCount', verifyAdmin, getOrderCount);
-
 module.exports = router;

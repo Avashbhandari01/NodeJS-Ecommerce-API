@@ -191,7 +191,7 @@ const uploadProfilePic = async (req, res) => {
         const userId = decodedToken.id;
 
         // Retrieve existing user
-        const existingUser = await User.findByPk(userId);
+        let existingUser = await User.findByPk(userId);
 
         if (!existingUser) {
             return res.status(404).json({ error: "User not found." });
@@ -199,10 +199,12 @@ const uploadProfilePic = async (req, res) => {
 
         // If there's a file uploaded, handle it
         if (req.file) {
-            existingUser.PhotoURL = req.file.path;
-            // Save updated user with profile picture
-            await existingUser.save();
-            return res.status(200).json({ status: "ok", message: "Profile picture updated successfully!" });
+            const photoURL = req.file.path;
+
+            await User.update({ PhotoURL: photoURL }, { where: { Id: userId } });
+            existingUser = await User.findByPk(userId);
+
+            return res.status(200).json({ status: "ok", message: "Profile picture updated successfully!", user: existingUser });
         } else {
             return res.status(400).json({ error: "No file uploaded" });
         }

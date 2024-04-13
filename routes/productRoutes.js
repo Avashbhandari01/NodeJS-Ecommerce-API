@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getProducts, createProduct, updateProduct, deleteProduct, getPopularProducts, getProductsByName, getTotalProducts, getPopularProductsCount } = require('../controllers/productController');
+const { getProducts, createProduct, updateProduct, deleteProduct, getPopularProducts, getProductsByName, getProductCounts } = require('../controllers/productController');
 const { verifyAdmin } = require('../middleware/verifyToken');
 
 /**
@@ -40,6 +40,8 @@ router.get('/products', getProducts);
  *                 items:
  *                   type: string
  *               Title:
+ *                 type: string
+ *               ARImage:
  *                 type: string
  *               Price:
  *                 type: number
@@ -87,6 +89,8 @@ router.post('/create-product', verifyAdmin, createProduct);
  *                 items:
  *                   type: string
  *               Title:
+ *                 type: string
+ *               ARImage:
  *                 type: string
  *               Price:
  *                 type: number
@@ -201,34 +205,18 @@ router.get('/get-product-by-name/:productName', getProductsByName);
 
 /**
  * @swagger
- * /api/total-products:
+ * /api/total-count:
  *   get:
- *     summary: Retrieve total products count
- *     description: Retrieve a count of total products.
+ *     summary: Retrieve total count
+ *     description: Retrieve a count of total products and orders.
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: A count of total products.
+ *         description: A count of total products and orders.
  *     tags:
  *       - Products
  */
-router.get('/total-products', verifyAdmin, getTotalProducts);
-
-/**
- * @swagger
- * /api/popular-products-count:
- *   get:
- *     summary: Retrieve popular products count
- *     description: Retrieve a count of popular products.
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: A count of popular products.
- *     tags:
- *       - Products
- */
-router.get('/popular-products-count', verifyAdmin, getPopularProductsCount);
+router.get('/total-count', verifyAdmin, getProductCounts);
 
 module.exports = router;
