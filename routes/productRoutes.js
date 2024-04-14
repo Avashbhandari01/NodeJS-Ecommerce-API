@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getProducts, createProduct, updateProduct, deleteProduct, getPopularProducts, getProductsByName, getProductCounts } = require('../controllers/productController');
+const { getProducts, createProduct, updateProduct, deleteProduct, getPopularProducts, getProductsByName, getProductsByCategory, getProductsByTitle, getProductCounts } = require('../controllers/productController');
 const { verifyAdmin } = require('../middleware/verifyToken');
 
 /**
@@ -49,6 +49,8 @@ router.get('/products', getProducts);
  *                 type: string
  *               Quantity:
  *                 type: number
+ *               Category:
+ *                 type: string
  *               IsPopular:
  *                 type: boolean
  *                 default: false
@@ -98,6 +100,8 @@ router.post('/create-product', verifyAdmin, createProduct);
  *                 type: string
  *               Quantity:
  *                 type: number
+ *               Category:
+ *                 type: string
  *               IsPopular:
  *                 type: boolean
  *                 default: false
@@ -202,6 +206,46 @@ router.get('/get-popular-products', getPopularProducts);
  *      - Products
  */
 router.get('/get-product-by-name/:productName', getProductsByName);
+
+/**
+ * @swagger
+ * /api/get-product-by-category/{category}:
+ *   get:
+ *     summary: Get all products by category
+ *     description: Retrieve all products with a specific category.
+ *     parameters:
+ *       - in: path
+ *         name: category
+ *         schema:
+ *           type: string
+ *         description: The category of the product to search for.
+ *     responses:
+ *       200:
+ *         description: A list of products matching the provided category
+ *     tags:
+ *      - Products
+ */
+router.get('/get-product-by-category/:category', getProductsByCategory);
+
+/**
+ * @swagger
+ * /api/get-product-by-title/{title}:
+ *   get:
+ *     summary: Get products by title
+ *     description: Retrieve products with a specific title.
+ *     parameters:
+ *       - in: path
+ *         name: title
+ *         schema:
+ *           type: string
+ *         description: The title of the product to search for.
+ *     responses:
+ *       200:
+ *         description: A list of products matching the provided title
+ *     tags:
+ *      - Products
+ */
+router.get('/get-product-by-title/:title', getProductsByTitle);
 
 /**
  * @swagger

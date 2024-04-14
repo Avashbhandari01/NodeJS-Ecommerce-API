@@ -41,6 +41,10 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 defaultValue: 0,
             },
+            Category: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
             IsFavourite: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,

@@ -1,4 +1,4 @@
-const { Review } = require('../database/dbConfig');
+const { Review, User } = require('../database/dbConfig');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const jwtSecret = process.env.JWT_SECRET;
@@ -6,7 +6,7 @@ const jwtSecret = process.env.JWT_SECRET;
 // Get all reviews
 const getReviews = async (req, res) => {
     try {
-        const reviews = await Review.findAll();
+        const reviews = await Review.findAll({ include: [{ model: User, attributes: ['FullName'] }] });
         res.status(200).json({ status: "ok", data: reviews });
     } catch (error) {
         return res.status(500).json({ error: error.message });
@@ -23,13 +23,13 @@ const getReviewByProductId = async (req, res) => {
             const reviews = await Review.findAll({
                 where: {
                     ProductId
-                }
+                },
+                include: [{ model: User, attributes: ['FullName'] }]
             });
             res.status(200).json({ status: "ok", data: reviews });
         } catch (error) {
             return res.status(500).json({ error: error.message });
         }
-
     }
 }
 

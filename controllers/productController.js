@@ -13,9 +13,9 @@ const getProducts = async (req, res) => {
 // Create a product
 const createProduct = async (req, res) => {
     try {
-        const { Images, ARImage, Colors, Title, Price, Description, Quantity, IsPopular, } = req.body;
+        const { Images, ARImage, Colors, Title, Price, Description, Quantity, Category, IsPopular, } = req.body;
 
-        if (!Images || !Colors || !Title || !Price || !Description || !Quantity || !IsPopular) {
+        if (!Images || !Colors || !Title || !Price || !Description || !Quantity || !Category) {
             return res.status(400).json({ error: "Please enter all the textfields!" });
         }
 
@@ -27,6 +27,7 @@ const createProduct = async (req, res) => {
             Price,
             Description,
             Quantity,
+            Category,
             IsPopular
         });
 
@@ -50,7 +51,7 @@ const updateProduct = async (req, res) => {
         }
 
         // Extract updated fields from request body
-        const { Images, ARImage, Colors, Title, Price, Description, Quantity, IsPopular } = req.body;
+        const { Images, ARImage, Colors, Title, Price, Description, Quantity, Category, IsPopular } = req.body;
 
         // Update product fields if provided
         if (Images) existingProduct.Images = Images;
@@ -60,6 +61,7 @@ const updateProduct = async (req, res) => {
         if (Price) existingProduct.Price = Price;
         if (Description) existingProduct.Description = Description;
         if (Quantity) existingProduct.Quantity = Quantity;
+        if (Category) existingProduct.Category = Category;
         if (IsPopular) existingProduct.IsPopular = IsPopular;
 
         // Save updated product
@@ -116,4 +118,36 @@ const getProductCounts = async (req, res) => {
     }
 }
 
-module.exports = { getProducts, createProduct, updateProduct, deleteProduct, getPopularProducts, getProductsByName, getProductCounts }
+// Get product by category
+const getProductsByCategory = async (req, res) => {
+    try {
+        const category = req.params.category;
+        const products = await Product.findAll({ where: { Category: category } });
+        res.status(200).json({ status: "ok", data: products });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
+// Get product by title
+const getProductsByTitle = async (req, res) => {
+    try {
+        const title = req.params.title;
+        const products = await Product.findAll({ where: { Title: title } });
+        res.status(200).json({ status: "ok", data: products });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
+module.exports = {
+    getProducts,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+    getPopularProducts,
+    getProductsByName,
+    getProductCounts,
+    getProductsByCategory,
+    getProductsByTitle
+}
