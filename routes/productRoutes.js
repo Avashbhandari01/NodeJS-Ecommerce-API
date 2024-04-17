@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { getProducts, createProduct, updateProduct, deleteProduct, getPopularProducts, getProductsByName, getProductsByCategory, getProductsByTitle, getProductCounts } = require('../controllers/productController');
+const { getProducts, createProduct, updateProduct, deleteProduct, getPopularProducts, getProductsByName, getProductsByCategory, getProductsByTitle, getProductCounts, uploadImageProductPicture, uploadARImage } = require('../controllers/productController');
 const { verifyAdmin } = require('../middleware/verifyToken');
+const multer = require('multer');
 
 /**
  * @swagger
@@ -262,5 +263,32 @@ router.get('/get-product-by-title/:title', getProductsByTitle);
  *       - Products
  */
 router.get('/total-count', verifyAdmin, getProductCounts);
+
+// Multer configuration for product pictures
+const productPicStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/product-pics');
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname);
+    }
+});
+const productPicUpload = multer({ storage: productPicStorage });
+
+// Multer configuration for AR images
+const arPicStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/ar-images');
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname);
+    }
+});
+const arPicUpload = multer({ storage: arPicStorage });
+
+// Route for uploading profile picture
+router.post('/uploadProductPicture', verifyAdmin, productPicUpload.single('productPic'), uploadImageProductPicture);
+
+router.post('/uploadARPicture', verifyAdmin, arPicUpload.single('ARPic'), uploadARImage);
 
 module.exports = router;

@@ -140,6 +140,75 @@ const getProductsByTitle = async (req, res) => {
     }
 }
 
+const uploadImageProductPicture = async (req, res) => {
+    try {
+        const productId = req.query.productId;
+
+        // Check if productId is present
+        if (!productId) {
+            return res.status(400).json({ error: "productId is required" });
+        }
+
+        // Retrieve existing product
+        let existingProduct = await Product.findByPk(productId);
+
+        if (!existingProduct) {
+            return res.status(404).json({ error: "Product not found." });
+        }
+
+        // Check if the request contains a file
+        if (req.file) {
+            const image = req.file.path;
+
+            const updatedImages = existingProduct.Images.concat(image);
+
+            await Product.update({ Images: updatedImages }, { where: { Id: productId } });
+            existingProduct = await Product.findByPk(productId);
+
+            return res.status(200).json({ status: "ok", data: existingProduct, message: "Product picture uploaded successfully!" });
+        } else {
+            // Handle case where no file is uploaded
+            return res.status(400).json({ error: "No file uploaded." });
+        }
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
+const uploadARImage = async (req, res) => {
+    try {
+        const productId = req.query.productId;
+
+        // Check if productId is present
+        if (!productId) {
+            return res.status(400).json({ error: "productId is required" });
+        }
+
+        // Retrieve existing product
+        let existingProduct = await Product.findByPk(productId);
+
+        if (!existingProduct) {
+            return res.status(404).json({ error: "Product not found." });
+        }
+
+        // Check if the request contains a file
+        if (req.file) {
+            const image = req.file.path;
+
+            await Product.update({ ARImage: image }, { where: { Id: productId } });
+            existingProduct = await Product.findByPk(productId);
+
+            return res.status(200).json({ status: "ok", data: existingProduct, message: "Product picture uploaded successfully!" });
+        } else {
+            // Handle case where no file is uploaded
+            return res.status(400).json({ error: "No file uploaded." });
+        }
+
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = {
     getProducts,
     createProduct,
@@ -149,5 +218,7 @@ module.exports = {
     getProductsByName,
     getProductCounts,
     getProductsByCategory,
-    getProductsByTitle
+    getProductsByTitle,
+    uploadImageProductPicture,
+    uploadARImage
 }
