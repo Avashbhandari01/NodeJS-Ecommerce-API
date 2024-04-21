@@ -48,6 +48,10 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // Serve static files from the 'uploads' directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+app.use(express.json());
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
 // Routes
 app.get("/", (req, res) => {
     res.send(`Server is running....`);

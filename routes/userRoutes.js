@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser, getUser, updateUser, uploadProfilePic } = require('../controllers/userController');
+const { registerUser, loginUser, getUser, updateUser, uploadProfilePic, forgotPassword, resetPassword } = require('../controllers/userController');
 const { verifyUser } = require('../middleware/verifyToken');
 const multer = require('multer');
 
@@ -115,5 +115,40 @@ const upload = multer({ storage: storage });
 
 // Route for uploading profile picture
 router.post('/uploadProfilePic', upload.single('profilePic'), uploadProfilePic);
+
+router.post('/forgot-password', forgotPassword);
+
+router.get('/reset-password', (req, res) => {
+    // Extract the token from the query parameters
+    const token = req.query.token;
+    const email = req.query.email;
+
+    // Render the reset password form
+    res.send(`
+        <html>
+            <head>
+                <title>Reset Password</title>
+            </head>
+            <body>
+                <h1>Reset Password</h1>
+                <form action="/api/reset-password?token=${token}&email=${email}" method="post" enctype="application/x-www-form-urlencoded"> <!-- Pass token as query parameter -->
+                    <label for="password">New Password:</label>
+                    <input type="password" id="password" name="password" required>
+                    <br>
+                    <button type="submit">Reset Password</button>
+                </form>
+            </body>
+        </html>
+    `);
+});
+
+router.post('/reset-password', (req, res) => {
+    const token = req.query.token; // Retrieve token from query parameters
+    const email = req.query.email; // Retrieve email from query parameters
+    const password = req.body.password; // Retrieve password from request body
+
+    // Pass token and password to the resetPassword controller function
+    resetPassword(token, password, email, res);
+});
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const { Product, Order } = require('../database/dbConfig');
+const { Op } = require('sequelize');
 
 // Get all products
 const getProducts = async (req, res) => {
@@ -10,10 +11,9 @@ const getProducts = async (req, res) => {
     }
 }
 
-// Create a product
 const createProduct = async (req, res) => {
     try {
-        const { Images, ARImage, Colors, Title, Price, Description, Quantity, Category, IsPopular, } = req.body;
+        const { Images, ARImage, Colors, Title, Price, Description, Quantity, Category, IsPopular } = req.body;
 
         if (!Images || !Colors || !Title || !Price || !Description || !Quantity || !Category) {
             return res.status(400).json({ error: "Please enter all the textfields!" });
@@ -32,7 +32,6 @@ const createProduct = async (req, res) => {
         });
 
         res.status(200).json({ status: "ok", data: data, message: "Product created successfully!" });
-
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
@@ -133,8 +132,28 @@ const getProductsByCategory = async (req, res) => {
 const getProductsByTitle = async (req, res) => {
     try {
         const title = req.params.title;
-        const products = await Product.findAll({ where: { Title: title } });
-        res.status(200).json({ status: "ok", data: products });
+
+        // Check if title length is 1
+        if (title.length === 1) {
+            const products = await Product.findAll({
+                where: {
+                    Title: {
+                        [Op.iLike]: `${title}%` // Search for products whose titles start with the single character
+                    }
+                }
+            });
+            res.status(200).json({ status: "ok", data: products });
+        } else {
+            // For titles longer than one character, perform the usual case-insensitive search
+            const products = await Product.findAll({
+                where: {
+                    Title: {
+                        [Op.iLike]: `%${title}%`
+                    }
+                }
+            });
+            res.status(200).json({ status: "ok", data: products });
+        }
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
