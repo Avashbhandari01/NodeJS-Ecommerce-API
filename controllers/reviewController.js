@@ -6,7 +6,7 @@ const jwtSecret = process.env.JWT_SECRET;
 // Get all reviews
 const getReviews = async (req, res) => {
     try {
-        const reviews = await Review.findAll({ include: [{ model: User, attributes: ['FullName'] }] });
+        const reviews = await Review.findAll({ include: [{ model: User, attributes: ['FullName', 'PhotoURL'] }] });
         res.status(200).json({ status: "ok", data: reviews });
     } catch (error) {
         return res.status(500).json({ error: error.message });
@@ -24,7 +24,7 @@ const getReviewByProductId = async (req, res) => {
                 where: {
                     ProductId
                 },
-                include: [{ model: User, attributes: ['FullName'] }]
+                include: [{ model: User, attributes: ['FullName', 'PhotoURL'] }]
             });
             res.status(200).json({ status: "ok", data: reviews });
         } catch (error) {
